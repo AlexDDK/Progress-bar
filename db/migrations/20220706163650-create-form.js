@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Forms', {
@@ -6,37 +5,37 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       creator_id: {
         type: Sequelize.INTEGER,
-				references: {
+        references: {
           model: {
-              tableName: 'Users',
+            tableName: 'Users',
           },
-      key: 'id',
-      },
+          key: 'id',
+        },
       },
       nameEmployee: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       nameMentor: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       link: {
-        type: Sequelize.TEXT
+        type: Sequelize.TEXT,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Forms');
-  }
+  },
 };
