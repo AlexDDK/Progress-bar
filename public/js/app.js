@@ -4,8 +4,24 @@ const container = document.querySelector('.mainContainer');
 const infoContainer = document.querySelector('.infoContainer');
 const ulContainer = document.querySelector('#ulContainer');
 const buttonContainer = document.querySelector('.buttonContainer');
-// console.log('++++++++++++++++++++++', infoContainer);
-// console.log('++++++++++++++++++++++', container);
+const randomstring = require("randomstring");
+
+
+
+function dropButton() {
+  return `
+
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+    Статус
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+    <li><button data-role="admin" class="dropdown-item" type="button">Назначить администратором</button></li>
+    <li><button data-role="user" class="dropdown-item" type="button">Назначить пользователем</button></li>
+  </ul>
+</div>
+`;
+}
 
 function innerlist(lists) {
   let res = '';
@@ -16,14 +32,11 @@ function innerlist(lists) {
 }
 
 function innerUsers(users) {
-  // console.log('LLLLIIIISSTTTSSS INNN FFFFUUUNNNCC', users);
   let res = '';
   for (let i = 0; i < users.length; i++) {
-    if (users.isAdmin) {
-      
-    }
-
-    res += `<li>${users[i].email}</li>`;
+    if (users[i].isAdmin === true) {
+      res += `<li><span class="h">${users[i].email}</span> (Администратор) ${dropButton()}</li><br>`;
+    } else { res += `<li><span class="h">${users[i].email}</span> (Пользователь) ${dropButton()}</li><br>`; }
   }
   // console.log('RRRRRRREEEEEESSSS', res);
   return res;
@@ -32,6 +45,12 @@ function innerUsers(users) {
 function newUser() {
   return `
     <button type="button" data-wh="new" class="btn btn-success">Добавить нового пользователя</button><br>
+    `;
+}
+
+function newList() {
+  return `
+    <button type="button" data-wh="newform" class="btn btn-success">Добавить новую форму</button><br>
     `;
 }
 
@@ -47,7 +66,24 @@ function addForm() {
     <label for="exampleInputPassword1" class="form-label">Password</label>
     <input name="pass" type="password" class="form-control" id="exampleInputPassword1">
   </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="submit" class="btn btn-primary">Создать!</button>
+</form>
+`;
+}
+
+function addFormForm() {
+  return `
+  <br>
+<form id="newForm">
+  <div class="mb-3">
+    <label for="exampleInputEmail1" class="form-label">Имя сотрудника</label>
+    <input name="nameEmployee" type="text" class="form-control" id="examplename" aria-describedby="emailHelp">
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Имя наставника</label>
+    <input name="nameMentor" type="text" class="form-control" id="exampleInputPassword1">
+  </div>
+  <button type="submit" class="btn btn-primary">Создать!</button>
 </form>
 `;
 }
@@ -72,7 +108,6 @@ container.addEventListener('click', async (e) => {
       alert('что-то пошло не так');
     }
   }
-  // -----------------конец все листки------------------------
 
   // -----------------мои листки------------------------
 
@@ -84,11 +119,11 @@ container.addEventListener('click', async (e) => {
       buttonContainer.innerHTML = '';
       ulContainer.innerHTML = '';
       ulContainer.insertAdjacentHTML('afterbegin', innerlist(lists));
+      buttonContainer.insertAdjacentHTML('afterbegin', newList());
     } else {
       alert('что-то пошло не так');
     }
   }
-  // -----------------конец мои листки------------------------
 
   // -----------------все hr-ы (пользователи)-----------------------
 
@@ -105,7 +140,6 @@ container.addEventListener('click', async (e) => {
       alert('что-то пошло не так');
     }
   }
-  // -----------------конец все hr-ы (пользователи)------------------------
 
   // -----------------Добавить нового пользователя-----------------------
 
@@ -114,7 +148,7 @@ container.addEventListener('click', async (e) => {
     buttonContainer.insertAdjacentHTML('afterbegin', addForm());
 
     const form = document.getElementById('newUser');
-    form.addEventListener('submit', async (ev) => { 
+    form.addEventListener('submit', async (ev) => {
       ev.preventDefault();
       const allInputs = Object.fromEntries(new FormData(form));
 
@@ -141,13 +175,109 @@ container.addEventListener('click', async (e) => {
       }
     });
   }
-  // -----------------конец добавить нового пользователя-------------------------
 
+  // -----------------Добавить новую форму------------------------
+
+  if (e.target.type === 'button' && e.target.dataset.wh === 'newform') {
+    buttonContainer.innerHTML = '';
+    buttonContainer.insertAdjacentHTML('afterbegin', addFormForm());
+
+    const form = document.getElementById('newForm');
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const allInputs = Object.fromEntries(new FormData(form));
+      const link = randomstring.generate();
+      allInputs.link = `http://localhost:3000/form/${link}`
+      console.log('LLLIIIIINNNKKK', allInputs.link);
+
+      const response = await fetch('/newform', {
+        method: 'post',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(allInputs),
+      });
+
+      if (response.ok) {
+        console.log('8855565425');
+        const resp = await fetch('/myforms');
+        const data = await resp.json();
+        console.log('rrrreeeeesssspppp', data);
+
+        ulContainer.innerHTML = '';
+        buttonContainer.innerHTML = '';
+        ulContainer.insertAdjacentHTML('afterbegin', innerUsers(data));
+        buttonContainer.insertAdjacentHTML('afterbegin', newUser());
+      } else {
+        alert('что-то пошло не так');
+      }
+    });
+  }
+
+  // -------------------выйти из сеанса-----------------------------
   if (e.target.type === 'button' && e.target.dataset.wh === 'out') {
     const response = await fetch('/logout');
     if (response.ok) {
       infoContainer.innerHTML = '';
       window.location = '/';
+    }
+  }
+
+  // -----------------Кнопка сделать пользователем---------------------
+
+  if (e.target.type === 'button' && e.target.dataset.role === 'user') {
+    const closestdiv = e.target.closest('div');
+    const closestli = closestdiv.closest('li');
+    const email = closestli.querySelector('.h');
+    const obj = { email: email.innerText, role: 'user' };
+
+    //  console.log('11111111122222222222333333333333333', email.innerText);
+
+    const response = await fetch('/update', {
+      method: 'post',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(obj),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      buttonContainer.innerHTML = '';
+      ulContainer.innerHTML = '';
+      ulContainer.insertAdjacentHTML('afterbegin', innerUsers(data));
+      buttonContainer.insertAdjacentHTML('afterbegin', newUser());
+    } else {
+      alert('что-то пошло не так');
+    }
+  }
+
+  // -----------------Кнопка сделать админом---------------------
+
+  if (e.target.type === 'button' && e.target.dataset.role === 'admin') {
+    const closestdiv = e.target.closest('div');
+    const closestli = closestdiv.closest('li');
+    const email = closestli.querySelector('.h');
+    const obj = { email: email.innerText, role: 'admin' };
+
+    const response = await fetch('/update', {
+      method: 'post',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(obj),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      buttonContainer.innerHTML = '';
+      ulContainer.innerHTML = '';
+      ulContainer.insertAdjacentHTML('afterbegin', innerUsers(data));
+      buttonContainer.insertAdjacentHTML('afterbegin', newUser());
+    } else {
+      alert('что-то пошло не так');
     }
   }
 });
