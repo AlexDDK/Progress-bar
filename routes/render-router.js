@@ -3,7 +3,7 @@ const router = require('express').Router();
 // const authorized = require('../middlewares/authorized');
 
 router.get('/', (req, res) => {
-  res.render('form');
+  res.render('index');
 });
 
 module.exports = router;
