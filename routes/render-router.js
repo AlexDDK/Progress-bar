@@ -20,6 +20,7 @@ router.get('/allforms', async (req, res) => {
   res.json(lists);
 });
 
+
 router.get('/myforms', async (req, res) => {
   console.log('MMMMMYYYY  FFFFFFFOOOORMMMMS');
   const lists = await Form.findAll({ where: { creator_id: res.locals.userId } });
@@ -58,6 +59,15 @@ router.post('/newuser', async (req, res) => {
     res.sendStatus(418);
   }
 });
+
+router.post('/newuser', async (req, res) => {
+  const { email, pass } = req.body;
+  try {
+    await User.create({ email, pass, isAdmin: false });
+  } catch (error) {
+    res.sendStatus(418);
+  }
+})
 
 router.get('/logout', (req, res) => {
   console.log('VVVVVIIIIIIIHHHOOODDD');

@@ -6,7 +6,6 @@ const FileStore = require('session-file-store')(session);
 const restRouter = require('./routes/rest-router');
 const renderRouter = require('./routes/render-router');
 
-
 const app = express();
 const PORT = process.env.DB_PORT;
 
