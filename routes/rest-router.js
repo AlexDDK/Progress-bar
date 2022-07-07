@@ -91,6 +91,20 @@ router.post('/linkId', async (req, res) => {
   }
 });
 
+router.post('/role', async (req, res) => { // adding role to the user and returning all users
+  const { email, isAdmin } = req.body;
+  try {
+    const currUser = await User.findOne({
+      where: { email },
+    });
+    currUser.isAdmin = isAdmin;
+    const allUsers = await User.findAll();
+    res.json({ allUsers }).status(200);
+  } catch (error) {
+    res.sendStatus(418);
+  }
+});
+
 router.get('/allforms', async (req, res) => {
   const allforms = await Form.findAll();
   res.json({ allforms });
