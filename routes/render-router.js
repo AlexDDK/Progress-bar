@@ -50,11 +50,32 @@ router.post('/main', async (req, res) => {
   }
 });
 
+
+router.post('/newuser', async (req, res) => {
+  const { email, pass } = req.body;
+  try {
+    await User.create({ email, pass, isAdmin: false });
+  } catch (error) {
+    res.sendStatus(418);
+  }
+});
+
 router.post('/newuser', async (req, res) => {
   const { email, pass } = req.body;
   try {
     await User.create({ email, pass, isAdmin: false });
     res.sendStatus(200);
+  } catch (error) {
+    res.sendStatus(418);
+  }
+});
+
+router.post('/newform', async (req, res) => {
+  const { nameEmployee, nameMentor, link } = req.body;
+  try {
+    await Form.create({
+      creator_id: req.session.userId, nameEmployee, nameMentor, link,
+    });
   } catch (error) {
     res.sendStatus(418);
   }
