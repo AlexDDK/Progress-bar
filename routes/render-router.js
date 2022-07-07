@@ -20,13 +20,11 @@ router.get('/allforms', async (req, res) => {
   res.json(lists);
 });
 
-router.get('/myforms', async (req, res) => {
-  
-  const lists = await Form.findAll({ where: { creator_id: req.locals.userId } });
-  console.log('88888888888888888888888888888888888888888', req.locals.userId );
-  res.json(lists);
-});
-
+// router.get('/myforms', async (req, res) => {
+//   const lists = await Form.findAll({ where: { creator_id: req.locals.userId } });
+//   console.log('88888888888888888888888888888888888888888', req.locals.userId);
+//   res.json(lists);
+// });
 
 router.post('/main', async (req, res) => {
   const { email, pass } = req.body;
@@ -41,6 +39,15 @@ router.post('/main', async (req, res) => {
       }
       res.sendStatus(418);
     }
+  } catch (error) {
+    res.sendStatus(418);
+  }
+});
+
+router.post('/newuser', async (req, res) => {
+  const { email, pass } = req.body;
+  try {
+    await User.create({ email, pass, isAdmin: false });
   } catch (error) {
     res.sendStatus(418);
   }

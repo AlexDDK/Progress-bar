@@ -6,9 +6,8 @@ const FileStore = require('session-file-store')(session);
 const restRouter = require('./routes/rest-router');
 const renderRouter = require('./routes/render-router');
 
-
 const app = express();
-const PORT = 3000;
+const PORT = process.env.DB_PORT;
 
 const sessionConfig = {
   name: 'user_sid', // Имя куки для хранения id сессии. По умолчанию - connect.sid
