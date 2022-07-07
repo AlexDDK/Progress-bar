@@ -50,6 +50,7 @@ router.post('/main', async (req, res) => {
   }
 });
 
+
 router.post('/newuser', async (req, res) => {
   const { email, pass } = req.body;
   try {
@@ -63,6 +64,7 @@ router.post('/newuser', async (req, res) => {
   const { email, pass } = req.body;
   try {
     await User.create({ email, pass, isAdmin: false });
+    res.sendStatus(200);
   } catch (error) {
     res.sendStatus(418);
   }
