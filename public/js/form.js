@@ -9,24 +9,24 @@ const formOutput = {
 
 // requesting data from DB
 
-try {
-  fetch('/form').then((res) => {
-    for (const el in res) {
-      if (el === input.id) {
-        input.value = res[el];
-        formOutput.names = input.value;
-      }
-      for (let i = 0; i < checkboxes.length; i += 1) {
-        if (el === checkboxes[i].id) {
-          checkboxes[i].checked = res[el];
-          formOutput[el] = res[el];
-        }
-      }
-    }
-  });
-} catch (error) {
-  alert('Something went wrong. Please, try to reload the page');
-}
+// try {
+//   fetch('/db/form').then((res) => {
+//     for (const el in res) {
+//       if (el === input.id) {
+//         input.value = res[el];
+//         formOutput.names = input.value;
+//       }
+//       for (let i = 0; i < checkboxes.length; i += 1) {
+//         if (el === checkboxes[i].id) {
+//           checkboxes[i].checked = res[el];
+//           formOutput[el] = res[el];
+//         }
+//       }
+//     }
+//   });
+// } catch (error) {
+//   alert('Something went wrong. Please, try to reload the page');
+// }
 
 // checkboxes logic
 
@@ -44,13 +44,16 @@ main.addEventListener('click', (event) => {
 
 window.addEventListener('beforeunload', async () => {
   formOutput.names = input.value;
-  // console.log(formOutput);
 
-  const response = await fetch('/form', {
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(formOutput),
-  });
+  try {
+    const response = await fetch('/db/form', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({ formOutput }),
+    });
+  } catch (error) {
+    alert('whoops');
+  }
 });
