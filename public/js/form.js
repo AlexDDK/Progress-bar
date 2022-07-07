@@ -10,26 +10,28 @@ const formOutput = {
 
 // requesting data from DB
 
-try {
-  fetch(`/db/form/${formId}`).then((res) => {
-    console.log(res);
-    // const data = res.json();
-    for (const el in res) {
-      if (el === input.id) {
-        input.value = res[el];
-        formOutput.names = input.value;
-      }
-      for (let i = 0; i < checkboxes.length; i += 1) {
-        if (el === checkboxes[i].id) {
-          checkboxes[i].checked = res[el];
-          formOutput[el] = res[el];
+window.addEventListener('load', async (event) => {
+  try {
+    const res = await fetch('/db/form/1'); // change here
+    if (res.ok) {
+      const data = await res.json();
+      for (const el in data) {
+        if (el === 'q8_Str') {
+          input.value = data[el];
+          formOutput.names = input.value;
+        }
+        for (let i = 0; i < checkboxes.length; i += 1) {
+          if (el === checkboxes[i].id) {
+            checkboxes[i].checked = data[el];
+            formOutput[el] = data[el];
+          }
         }
       }
     }
-  });
-} catch (error) {
-  alert('Something went wrong. Please, try to reload the page');
-}
+  } catch {
+    alert("Couldn't get data from DB. Please reload the page.");
+  }
+});
 
 // checkboxes logic
 
@@ -47,7 +49,6 @@ main.addEventListener('click', (event) => {
 
 window.addEventListener('beforeunload', async () => {
   formOutput.names = input.value;
-
   try {
     const response = await fetch('/db/form', {
       method: 'POST',
@@ -57,6 +58,6 @@ window.addEventListener('beforeunload', async () => {
       body: JSON.stringify({ formOutput }),
     });
   } catch (error) {
-    alert('whoops');
+    alert("Couldn't send data to DB.");
   }
 });
