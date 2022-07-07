@@ -8,22 +8,22 @@ module.exports = {
         isAdmin: true,
         createdAt: new Date(),
         updatedAt: new Date(),
-      }],
-      [{
+      },
+      {
         email: 'yo122@mail.com',
         pass: '1234',
         isAdmin: true,
         createdAt: new Date(),
         updatedAt: new Date(),
-      }],
-      [{
+      },
+      {
         email: '1234@mail.com',
         pass: '1234',
         isAdmin: true,
         createdAt: new Date(),
         updatedAt: new Date(),
-      }],
-      [{
+      },
+      {
         email: 'ya3fffffskskskss@mail.com',
         pass: '1234',
         isAdmin: false,
