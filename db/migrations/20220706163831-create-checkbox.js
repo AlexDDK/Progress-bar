@@ -54,6 +54,8 @@ module.exports = {
           },
           key: 'id',
         },
+        allowNull: false,
+        unique: true,
       },
       createdAt: {
         allowNull: false,
