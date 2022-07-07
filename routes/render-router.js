@@ -60,6 +60,49 @@ router.post('/newuser', async (req, res) => {
   }
 });
 
+router.post('/newform', async (req, res) => {
+  const { nameEmployee, nameMentor, link } = req.body;
+  try {
+    await Form.create({
+      creator_id: req.session.userId, nameEmployee, nameMentor, link,
+    });
+    res.sendStatus(200);
+  } catch (error) {
+    res.sendStatus(418);
+  }
+});
+
+router.post('/update', async (req, res) => { // adding role to the user and returning all users
+  const { email, role } = req.body;
+  console.log(role);
+  try {
+    const currUser = await User.findOne({
+      where: { email },
+    });
+    if (role === 'admin') {
+      await User.update({
+        isAdmin: true,
+      }, {
+        where: {
+          email,
+        },
+      });
+    } else {
+      await User.update({
+        isAdmin: false,
+      }, {
+        where: {
+          email,
+        },
+      });
+    }
+    const allUsers = await User.findAll();
+    res.json(allUsers);
+  } catch (error) {
+    res.sendStatus(418);
+  }
+});
+
 router.get('/logout', (req, res) => {
   console.log('VVVVVIIIIIIIHHHOOODDD');
   req.session.destroy();

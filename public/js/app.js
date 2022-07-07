@@ -4,9 +4,7 @@ const container = document.querySelector('.mainContainer');
 const infoContainer = document.querySelector('.infoContainer');
 const ulContainer = document.querySelector('#ulContainer');
 const buttonContainer = document.querySelector('.buttonContainer');
-const randomstring = require("randomstring");
-
-
+// const randomstring = require('randomstring');
 
 function dropButton() {
   return `
@@ -21,6 +19,16 @@ function dropButton() {
   </ul>
 </div>
 `;
+}
+
+function generateLink() {
+  const result = [];
+  const eng = 'abcdefghijklmnopqrstuvwxyz1234567890'.split('');
+  for (let i = 0; i < 25; i += 1) {
+    const random = Math.round(Math.random() * eng.length - 0.5);
+    result.push(eng[random]);
+  }
+  return result.join('');
 }
 
 function innerlist(lists) {
@@ -186,8 +194,8 @@ container.addEventListener('click', async (e) => {
     form.addEventListener('submit', async (ev) => {
       ev.preventDefault();
       const allInputs = Object.fromEntries(new FormData(form));
-      const link = randomstring.generate();
-      allInputs.link = `http://localhost:3000/form/${link}`
+      const link = generateLink();
+      allInputs.link = `http://localhost:3000/form/${link}`;
       console.log('LLLIIIIINNNKKK', allInputs.link);
 
       const response = await fetch('/newform', {
@@ -199,15 +207,15 @@ container.addEventListener('click', async (e) => {
       });
 
       if (response.ok) {
-        console.log('8855565425');
+        // console.log('8855565425');
         const resp = await fetch('/myforms');
-        const data = await resp.json();
-        console.log('rrrreeeeesssspppp', data);
+        const lists = await resp.json();
+        // console.log('rrrreeeeesssspppp', data);
 
         ulContainer.innerHTML = '';
         buttonContainer.innerHTML = '';
-        ulContainer.insertAdjacentHTML('afterbegin', innerUsers(data));
-        buttonContainer.insertAdjacentHTML('afterbegin', newUser());
+        ulContainer.insertAdjacentHTML('afterbegin', innerlist(lists));
+        buttonContainer.insertAdjacentHTML('afterbegin', newList());
       } else {
         alert('что-то пошло не так');
       }
@@ -241,9 +249,10 @@ container.addEventListener('click', async (e) => {
       body: JSON.stringify(obj),
     });
 
-    const data = await response.json();
-
     if (response.ok) {
+      // console.log('.........................................');
+      const data = await response.json();
+      // console.log('6666666666666666666666666666666666666666666', data);
       buttonContainer.innerHTML = '';
       ulContainer.innerHTML = '';
       ulContainer.insertAdjacentHTML('afterbegin', innerUsers(data));
