@@ -31,4 +31,10 @@ app.get('/alllist', (req, res) => {
   res.json( {lists} );
 });
 
+app.get('/mylist', (req, res) => {
+  lists = [ { fullName: 'Ivan', age: 26 }, { fullName: 'Petr', age: 29 }];
+  res.json( {lists} );
+});
+
+
 app.listen(3000, () => console.log('Server has been started on port 3000'));

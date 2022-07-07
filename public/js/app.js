@@ -79,11 +79,11 @@ container.addEventListener('click', async (e) => {
     // const closestli = e.target.closest('li');
 
     const response = await fetch('/mylist');
-    const data = await response.json();
+    const lists = await response.json();
 
     if (response.ok) {
-      infoContainer.innerHTML = '';
-      infoContainer.insertAdjacentHTML('afterbegin', innerlist(data));
+      ulContainer.innerHTML = '';
+      ulContainer.insertAdjacentHTML('afterbegin', innerlist(data));
     } else {
       alert('что-то пошло не так');
     }
