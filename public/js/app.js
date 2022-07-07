@@ -3,42 +3,41 @@
 const container = document.querySelector('.mainContainer');
 const infoContainer = document.querySelector('.infoContainer');
 const ulContainer = document.querySelector('#ulContainer');
+const buttonContainer = document.querySelector('.buttonContainer');
 // console.log('++++++++++++++++++++++', infoContainer);
 // console.log('++++++++++++++++++++++', container);
 
 function innerlist(lists) {
-  console.log('LLLLIIIISSTTTSSS INNN FFFFUUUNNNCC', lists);
   let res = '';
   for (let i = 0; i < lists.length; i++) {
     res += `<li>${lists[i].nameEmployee}</li>`;
   }
+  return res;
+}
+
+function innerUsers(users) {
+  console.log('LLLLIIIISSTTTSSS INNN FFFFUUUNNNCC', users);
+  let res = '';
+  for (let i = 0; i < users.length; i++) {
+    res += `<li>${users[i].email}</li>`;
+  }
   console.log('RRRRRRREEEEEESSSS', res);
   return res;
-
-//   return `;
-//     <ul id="ulid">
-//     {{#each lists}}
-//     <li>
-//         {{this.fullName}} progress!
-//     </li>
-//     {{/each}}
-// </ul>`;
 }
 
 function newUser() {
-  return;
-  `
-    <button type="button" data-wh="new" class="btn btn-success">Добавить нового пользователя</button>
+  return `
+    <button type="button" data-wh="new" class="btn btn-success">Добавить нового пользователя</button><br>
     `;
 }
 
 function addForm() {
   return `
+  <br>
 <form id="newUser">
   <div class="mb-3">
     <label for="exampleInputEmail1" class="form-label">Email address</label>
     <input name="email" type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
   </div>
   <div class="mb-3">
     <label for="exampleInputPassword1" class="form-label">Password</label>
@@ -55,12 +54,14 @@ container.addEventListener('click', async (e) => {
     // const closestli = e.target.closest('li');
 
     const response = await fetch('/allforms');
+    console.log('555777777777777777777777777777777777', response);
     const lists = await response.json();
 
     if (response.ok) {
       // lists = lists.lists;
       // infoContainer.insertAdjacentHTML('afterbegin', innerlist({lists}));
 
+      buttonContainer.innerHTML = '';
       ulContainer.innerHTML = '';
       ulContainer.insertAdjacentHTML('afterbegin', innerlist(lists));
     } else {
@@ -69,19 +70,14 @@ container.addEventListener('click', async (e) => {
   }
   // -----------------конец все листки------------------------
 
-
-
-
   // -----------------мои листки------------------------
 
   if (e.target.type === 'button' && e.target.dataset.wh === 'my') {
-    // const closestli = e.target.closest('li');
-
     const response = await fetch('/myforms');
     const lists = await response.json();
-    console.log('777777777777777777777777777777777777', lists);
 
     if (response.ok) {
+      buttonContainer.innerHTML = '';
       ulContainer.innerHTML = '';
       ulContainer.insertAdjacentHTML('afterbegin', innerlist(lists));
     } else {
@@ -93,13 +89,14 @@ container.addEventListener('click', async (e) => {
   // -----------------все hr-ы (пользователи)-----------------------
 
   if (e.target.type === 'button' && e.target.dataset.wh === 'user') {
-    const response = await fetch('/users');
+    const response = await fetch('/allusers');
     const data = await response.json();
 
     if (response.ok) {
-      infoContainer.innerHTML = '';
-      infoContainer.insertAdjacentHTML('afterbegin', innerlist(data));
-      infoContainer.insertAdjacentHTML('beforeend ', newUser());
+      buttonContainer.innerHTML = '';
+      ulContainer.innerHTML = '';
+      ulContainer.insertAdjacentHTML('afterbegin', innerUsers(data));
+      buttonContainer.insertAdjacentHTML('afterbegin', newUser());
     } else {
       alert('что-то пошло не так');
     }
@@ -109,8 +106,11 @@ container.addEventListener('click', async (e) => {
   // -----------------Добавить нового пользователя-----------------------
 
   if (e.target.type === 'button' && e.target.dataset.wh === 'new') {
-    infoContainer.insertAdjacentHTML('beforeend ', addForm());
+    buttonContainer.innerHTML = '';
+    buttonContainer.insertAdjacentHTML('afterbegin', addForm());
+
     const form = document.getElementById('newUser');
+    console.log('FFFFOOOOOORRMMMMM', form);
     form.addEventListener('submit', async (ev) => { // Возможно листенер на сабмит нужно вынести из листенера на клик
       ev.preventDefault();
       const allInputs = Object.fromEntries(new FormData(form));
@@ -123,11 +123,11 @@ container.addEventListener('click', async (e) => {
         body: JSON.stringify(allInputs),
       });
       if (response.ok) {
-        const resp = await fetch('/users');
+        const resp = await fetch('/allusers');
         const data = await resp.json();
         infoContainer.innerHTML = '';
-        infoContainer.insertAdjacentHTML('afterbegin', innerlist(data));
-        infoContainer.insertAdjacentHTML('beforeend ', newUser());
+        ulContainer.insertAdjacentHTML('afterbegin', innerUsers(data));
+        buttonContainer.insertAdjacentHTML('afterbegin', newUser());
       } else {
         alert('что-то пошло не так');
       }
@@ -135,7 +135,11 @@ container.addEventListener('click', async (e) => {
   }
   // -----------------конец добавить нового пользователя-------------------------
 
-  //   if (e.target.type === 'button' && e.target.dataset.exit) {
-
-//   }
+  if (e.target.type === 'button' && e.target.dataset.wh === 'out') {
+    const response = await fetch('/logout');
+    if (response.ok) {
+      infoContainer.innerHTML = '';
+      window.location = '/';
+    }
+  }
 });
