@@ -2,9 +2,18 @@ const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const { Checkbox, Form, User } = require('../db/models');
 
-// router.get('/form', (req, res) => {
-//   const 
-// });
+router.get('/form/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const currCheckbox = await Checkbox.findOne({
+      where: { link_id: id },
+    });
+
+    res.json(currCheckbox).status(200);
+  } catch (error) {
+    res.sendStatus(418);
+  }
+});
 
 router.post('/form', async (req, res) => {
   const { formOutput } = req.body;

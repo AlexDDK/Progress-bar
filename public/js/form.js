@@ -4,13 +4,16 @@
 const input = document.querySelector('#names');
 const main = document.querySelector('#main');
 const checkboxes = document.querySelectorAll('.form-check-input');
+const formId = main.dataset.formid;
 const formOutput = {
 };
 
 // requesting data from DB
 
 try {
-  fetch('/db/form').then((res) => {
+  fetch(`/db/form/${formId}`).then((res) => {
+    console.log(res);
+    // const data = res.json();
     for (const el in res) {
       if (el === input.id) {
         input.value = res[el];
