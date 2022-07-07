@@ -10,18 +10,18 @@ const buttonContainer = document.querySelector('.buttonContainer');
 function innerlist(lists) {
   let res = '';
   for (let i = 0; i < lists.length; i++) {
-    res += `<li>${lists[i].nameEmployee}</li>`;
+    res += `<li >${lists[i].nameEmployee}</li>`;
   }
   return res;
 }
 
 function innerUsers(users) {
-  console.log('LLLLIIIISSTTTSSS INNN FFFFUUUNNNCC', users);
+  // console.log('LLLLIIIISSTTTSSS INNN FFFFUUUNNNCC', users);
   let res = '';
   for (let i = 0; i < users.length; i++) {
     res += `<li>${users[i].email}</li>`;
   }
-  console.log('RRRRRRREEEEEESSSS', res);
+  // console.log('RRRRRRREEEEEESSSS', res);
   return res;
 }
 
@@ -110,8 +110,7 @@ container.addEventListener('click', async (e) => {
     buttonContainer.insertAdjacentHTML('afterbegin', addForm());
 
     const form = document.getElementById('newUser');
-    console.log('FFFFOOOOOORRMMMMM', form);
-    form.addEventListener('submit', async (ev) => { // Возможно листенер на сабмит нужно вынести из листенера на клик
+    form.addEventListener('submit', async (ev) => { 
       ev.preventDefault();
       const allInputs = Object.fromEntries(new FormData(form));
 
@@ -122,10 +121,15 @@ container.addEventListener('click', async (e) => {
         },
         body: JSON.stringify(allInputs),
       });
+      console.log('RRRREEEEEESSSSSPPPP', response);
       if (response.ok) {
+        console.log('8855565425');
         const resp = await fetch('/allusers');
         const data = await resp.json();
-        infoContainer.innerHTML = '';
+        console.log('rrrreeeeesssspppp', data);
+
+        ulContainer.innerHTML = '';
+        buttonContainer.innerHTML = '';
         ulContainer.insertAdjacentHTML('afterbegin', innerUsers(data));
         buttonContainer.insertAdjacentHTML('afterbegin', newUser());
       } else {
