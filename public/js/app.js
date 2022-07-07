@@ -19,6 +19,10 @@ function innerUsers(users) {
   // console.log('LLLLIIIISSTTTSSS INNN FFFFUUUNNNCC', users);
   let res = '';
   for (let i = 0; i < users.length; i++) {
+    if (users.isAdmin) {
+      
+    }
+
     res += `<li>${users[i].email}</li>`;
   }
   // console.log('RRRRRRREEEEEESSSS', res);
