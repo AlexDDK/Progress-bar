@@ -1,21 +1,36 @@
-const infoContainer = document.getElementById('infoContainer');
-const container = document.querySelector('.container');
+console.log('KJBFKSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS');
 
-function innerlist(arr) {
-  return `
-    <ul id="ulid">
-    {{#each lists}}
-    <li>
-        {{this.fullName}} progress!
-    </li>
-    {{/each}}
-</ul>`;
+const container = document.querySelector('.mainContainer');
+const infoContainer = document.querySelector('.infoContainer');
+const ulContainer = document.querySelector('#ulContainer');
+console.log('++++++++++++++++++++++', infoContainer);
+console.log('++++++++++++++++++++++', container);
+
+function innerlist(lists) {
+  console.log('LLLLIIIISSTTTSSS INNN FFFFUUUNNNCC', lists);
+  let res = ''
+  for (let i = 0; i < lists.length; i++) {
+    res = res +  `<li>${lists[i].fullName}</li>`   
+  }
+  console.log('RRRRRRREEEEEESSSS',res);
+  return res;
+
+
+
+//   return `;
+//     <ul id="ulid">
+//     {{#each lists}}
+//     <li>
+//         {{this.fullName}} progress!
+//     </li>
+//     {{/each}}
+// </ul>`;
 }
 
 function newUser() {
   return;
   `
-    <button type="button" data-new class="btn btn-success">Добавить нового пользователя</button>
+    <button type="button" data-wh="new" class="btn btn-success">Добавить нового пользователя</button>
     `;
 }
 
@@ -38,14 +53,20 @@ function addForm() {
 
 container.addEventListener('click', async (e) => {
   // -----------------все листки------------------------
-  if (e.target.type === 'button' && e.target.dataset.all) {
+  if (e.target.type === 'button' && e.target.dataset.wh === 'all') {
     // const closestli = e.target.closest('li');
 
     const response = await fetch('/alllist');
-    const data = await response.json();
+    console.log('666666666666666666666666666666', response);
+    const lists = await response.json();
+    console.log('LLLLIIIISSSSTTTTTSSSS', lists);
 
     if (response.ok) {
-      infoContainer.insertAdjacentHTML('afterbegin', innerlist(data));
+      // lists = lists.lists;
+      // infoContainer.insertAdjacentHTML('afterbegin', innerlist({lists}));
+      console.log('1111111111111111111111111111', innerlist(lists));
+      ulContainer.innerHTML = '';
+      ulContainer.insertAdjacentHTML('afterbegin', innerlist(lists.lists));
     } else {
       alert('что-то пошло не так');
     }
@@ -54,10 +75,10 @@ container.addEventListener('click', async (e) => {
 
   // -----------------мои листки------------------------
 
-  if (e.target.type === 'button' && e.target.dataset.my) {
+  if (e.target.type === 'button' && e.target.dataset.wh === 'my') {
     // const closestli = e.target.closest('li');
 
-    const response = await fetch(`/mylist/${userIdFromSession}`);
+    const response = await fetch('/mylist');
     const data = await response.json();
 
     if (response.ok) {
@@ -71,7 +92,7 @@ container.addEventListener('click', async (e) => {
 
   // -----------------все hr-ы (пользователи)-----------------------
 
-  if (e.target.type === 'button' && e.target.dataset.user) {
+  if (e.target.type === 'button' && e.target.dataset.wh === 'user') {
     const response = await fetch('/users');
     const data = await response.json();
 
@@ -87,10 +108,10 @@ container.addEventListener('click', async (e) => {
 
   // -----------------Добавить нового пользователя-----------------------
 
-  if (e.target.type === 'button' && e.target.dataset.new) {
+  if (e.target.type === 'button' && e.target.dataset.wh === 'new') {
     infoContainer.insertAdjacentHTML('beforeend ', addForm());
     const form = document.getElementById('newUser');
-    form.addEventListener('submit', async (ev) => {  // Возможно листенер на сабмит нужно вынести из листенера на клик
+    form.addEventListener('submit', async (ev) => { // Возможно листенер на сабмит нужно вынести из листенера на клик
       ev.preventDefault();
       const allInputs = Object.fromEntries(new FormData(form));
 
@@ -114,11 +135,7 @@ container.addEventListener('click', async (e) => {
   }
   // -----------------конец добавить нового пользователя-------------------------
 
+  //   if (e.target.type === 'button' && e.target.dataset.exit) {
 
-  if (e.target.type === 'button' && e.target.dataset.exit) {
-    
-        
-  }
-
-
+//   }
 });
