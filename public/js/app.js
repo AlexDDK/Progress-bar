@@ -1,21 +1,19 @@
-console.log('KJBFKSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS');
+// console.log('KJBFKSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS');
 
 const container = document.querySelector('.mainContainer');
 const infoContainer = document.querySelector('.infoContainer');
 const ulContainer = document.querySelector('#ulContainer');
-console.log('++++++++++++++++++++++', infoContainer);
-console.log('++++++++++++++++++++++', container);
+// console.log('++++++++++++++++++++++', infoContainer);
+// console.log('++++++++++++++++++++++', container);
 
 function innerlist(lists) {
   console.log('LLLLIIIISSTTTSSS INNN FFFFUUUNNNCC', lists);
-  let res = ''
+  let res = '';
   for (let i = 0; i < lists.length; i++) {
-    res = res +  `<li>${lists[i].fullName}</li>`   
+    res += `<li>${lists[i].nameEmployee}</li>`;
   }
-  console.log('RRRRRRREEEEEESSSS',res);
+  console.log('RRRRRRREEEEEESSSS', res);
   return res;
-
-
 
 //   return `;
 //     <ul id="ulid">
@@ -56,34 +54,35 @@ container.addEventListener('click', async (e) => {
   if (e.target.type === 'button' && e.target.dataset.wh === 'all') {
     // const closestli = e.target.closest('li');
 
-    const response = await fetch('/alllist');
-    console.log('666666666666666666666666666666', response);
+    const response = await fetch('/allforms');
     const lists = await response.json();
-    console.log('LLLLIIIISSSSTTTTTSSSS', lists);
 
     if (response.ok) {
       // lists = lists.lists;
       // infoContainer.insertAdjacentHTML('afterbegin', innerlist({lists}));
-      console.log('1111111111111111111111111111', innerlist(lists));
+
       ulContainer.innerHTML = '';
-      ulContainer.insertAdjacentHTML('afterbegin', innerlist(lists.lists));
+      ulContainer.insertAdjacentHTML('afterbegin', innerlist(lists));
     } else {
       alert('что-то пошло не так');
     }
   }
   // -----------------конец все листки------------------------
 
+
+
+
   // -----------------мои листки------------------------
 
   if (e.target.type === 'button' && e.target.dataset.wh === 'my') {
     // const closestli = e.target.closest('li');
 
-    const response = await fetch('/mylist');
+    const response = await fetch('/myforms');
     const lists = await response.json();
 
     if (response.ok) {
       ulContainer.innerHTML = '';
-      ulContainer.insertAdjacentHTML('afterbegin', innerlist(data));
+      ulContainer.insertAdjacentHTML('afterbegin', innerlist(lists));
     } else {
       alert('что-то пошло не так');
     }

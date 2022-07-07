@@ -26,17 +26,16 @@ logContainer.addEventListener('click', async (e) => {
     form.addEventListener('submit', async (event) => {
       event.preventDefault();
       const allInputs = Object.fromEntries(new FormData(form));
-      const response = await fetch('/main')//, {
-        // method: 'post',
-        // headers: {
-        //   'Content-type': 'application/json',
-        // },
-        // body: JSON.stringify(allInputs),
-      // });
+      const response = await fetch('/main', {
+        method: 'post',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(allInputs),
+      });
       if (response.ok) {
-        console.log("RRRRREEEESSSSPOOONNNSSEEE OOOOKKKK = ", response);
         window.location = '/main';
-      }
+      } else { alert('Неверые данные. Проверьте e-mail и пароль'); }
     });
   }
 });
