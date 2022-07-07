@@ -12,8 +12,6 @@ const formOutput = {
 // requesting data from DB
 
 window.addEventListener('load', async (event) => {
-  console.log(`\n\n${formId}\n\n`);
-
   try {
     const res = await fetch(`/db/form/${formId}`); // change here
     if (res.ok) {

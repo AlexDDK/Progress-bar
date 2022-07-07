@@ -85,7 +85,7 @@ router.post('/linkId', async (req, res) => {
       where: { link },
     });
 
-    res.json(currForm.id).status(200);
+    res.json(currForm).status(200);
   } catch (error) {
     res.sendStatus(418);
   }
