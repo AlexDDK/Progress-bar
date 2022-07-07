@@ -13,6 +13,9 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.User, {
         foreignKey: 'creator_id',
       });
+      // this.hasMany(models.Checkbox, {
+      //   foreignKey: 'link_id',
+      // });
     }
 
     static associate(models) {

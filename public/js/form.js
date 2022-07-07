@@ -9,24 +9,24 @@ const formOutput = {
 
 // requesting data from DB
 
-// try {
-//   fetch('/db/form').then((res) => {
-//     for (const el in res) {
-//       if (el === input.id) {
-//         input.value = res[el];
-//         formOutput.names = input.value;
-//       }
-//       for (let i = 0; i < checkboxes.length; i += 1) {
-//         if (el === checkboxes[i].id) {
-//           checkboxes[i].checked = res[el];
-//           formOutput[el] = res[el];
-//         }
-//       }
-//     }
-//   });
-// } catch (error) {
-//   alert('Something went wrong. Please, try to reload the page');
-// }
+try {
+  fetch('/db/form').then((res) => {
+    for (const el in res) {
+      if (el === input.id) {
+        input.value = res[el];
+        formOutput.names = input.value;
+      }
+      for (let i = 0; i < checkboxes.length; i += 1) {
+        if (el === checkboxes[i].id) {
+          checkboxes[i].checked = res[el];
+          formOutput[el] = res[el];
+        }
+      }
+    }
+  });
+} catch (error) {
+  alert('Something went wrong. Please, try to reload the page');
+}
 
 // checkboxes logic
 
