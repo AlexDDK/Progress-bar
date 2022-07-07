@@ -32,7 +32,6 @@ router.get('/allusers', async (req, res) => {
   res.json(allusers);
 });
 
-
 router.post('/main', async (req, res) => {
   const { email, pass } = req.body;
   try {
@@ -51,11 +50,19 @@ router.post('/main', async (req, res) => {
   }
 });
 
+router.post('/newuser', async (req, res) => {
+  const { email, pass } = req.body;
+  try {
+    await User.create({ email, pass, isAdmin: false });
+  } catch (error) {
+    res.sendStatus(418);
+  }
+});
 
 router.get('/logout', (req, res) => {
   console.log('VVVVVIIIIIIIHHHOOODDD');
   req.session.destroy();
-	res.clearCookie('user_sid');
+  res.clearCookie('user_sid');
   // res.redirect('/');
   res.sendStatus(200);
 });
