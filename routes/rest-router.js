@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const { Checkbox, Form, User } = require('../db/models');
 
 // router.get('/form', (req, res) => {
-//   const 
+//   const
 // });
 
 router.post('/form', async (req, res) => {
@@ -67,6 +67,27 @@ router.post('/form', async (req, res) => {
   } catch (error) {
     return res.sendStatus(418);
   }
+});
+
+router.get('/allforms', async (req, res) => {
+  const allforms = await Form.findAll();
+  res.json({ allforms });
+});
+
+router.get('/myforms', async (req, res) => {
+  const myforms = await Form.findAll({ where: { creator_id: res.locals.userId } });
+  res.json({ myforms });
+});
+
+router.get('/allusers', async (req, res) => {
+  const allusers = await User.findAll();
+  res.json({ allusers });
+});
+
+router.get('/logout', (req, res) => {
+  req.session.destroy();
+	res.clearCookie('user_sid');
+  res.redirect('/');
 });
 
 module.exports = router;
