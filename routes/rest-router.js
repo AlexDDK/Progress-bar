@@ -6,7 +6,7 @@ router.get('/form/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const currCheckbox = await Checkbox.findOne({
-      where: { link_id: id },
+      where: { link_id: Number(id) }, // number?
     });
 
     res.json(currCheckbox).status(200);
@@ -16,10 +16,10 @@ router.get('/form/:id', async (req, res) => {
 });
 
 router.post('/form', async (req, res) => {
-  const { formOutput } = req.body;
+  const { formOutput, formId } = req.body;
   try {
     const currCheckbox = await Checkbox.findOne({
-      where: { link_id: 1 }, // change later
+      where: { link_id: Number(formId) }, // change later
     });
     if (currCheckbox) {
       try {
@@ -41,7 +41,7 @@ router.post('/form', async (req, res) => {
             updatedAt: new Date(),
           },
           {
-            where: { link_id: 1 }, // change later
+            where: { link_id: Number(formId) }, // change later
           },
         );
       } catch (error) {
@@ -63,7 +63,7 @@ router.post('/form', async (req, res) => {
           q11: formOutput.q11,
           q12: formOutput.q12,
           q8_Str: formOutput.names,
-          link_id: 1, // change later
+          link_id: Number(formId), // change later
           createdAt: new Date(),
           updatedAt: new Date(),
         });
@@ -77,14 +77,15 @@ router.post('/form', async (req, res) => {
   }
 });
 
-router.get('/linkId', async (req, res) => {
-  const link = `http://localhost:3000/${req.body.link}`;
+router.post('/linkId', async (req, res) => {
+  const link = `http://localhost:3000/form/${req.body.link}`;
+
   try {
     const currForm = await Form.findOne({
       where: { link },
     });
 
-    res.json(currForm).status(200);
+    res.json(currForm.id).status(200);
   } catch (error) {
     res.sendStatus(418);
   }

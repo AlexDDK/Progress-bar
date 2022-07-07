@@ -5,14 +5,17 @@ const input = document.querySelector('#names');
 const main = document.querySelector('#main');
 const checkboxes = document.querySelectorAll('.form-check-input');
 const formId = main.dataset.formid;
+
 const formOutput = {
 };
 
 // requesting data from DB
 
 window.addEventListener('load', async (event) => {
+  console.log(`\n\n${formId}\n\n`);
+
   try {
-    const res = await fetch('/db/form/1'); // change here
+    const res = await fetch(`/db/form/${formId}`); // change here
     if (res.ok) {
       const data = await res.json();
       for (const el in data) {
@@ -55,7 +58,7 @@ window.addEventListener('beforeunload', async () => {
       headers: {
         'Content-type': 'application/json',
       },
-      body: JSON.stringify({ formOutput }),
+      body: JSON.stringify({ formOutput, formId }),
     });
   } catch (error) {
     alert("Couldn't send data to DB.");

@@ -10,8 +10,8 @@ router.get('/', (req, res) => {
 router.get('/form/:link', async (req, res) => {
   const { link } = req.params;
 
-  const response = await fetch('/db/linkId', {
-    method: 'get',
+  const response = await fetch('http://localhost:3000/db/linkId', {
+    method: 'post',
     headers: {
       'Content-Type': 'application/json',
     },
@@ -20,6 +20,7 @@ router.get('/form/:link', async (req, res) => {
 
   if (response.ok) {
     const data = await response.json();
+
     res.render('form', { data });
   } else {
     res.sendStatus(418);
