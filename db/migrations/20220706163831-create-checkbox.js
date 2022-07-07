@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Checkboxes', {
@@ -6,67 +5,67 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       q1: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
       },
       q2: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
       },
       q3: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
       },
       q4: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
       },
       q5: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
       },
       q6: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
       },
       q7: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
       },
       q8: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
       },
       q9: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
       },
       q10: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
       },
       q11: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
       },
       q12: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
       },
       q8_Str: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       link_id: {
         type: Sequelize.INTEGER,
-				references: {
+        references: {
           model: {
-              tableName: 'Forms',
+            tableName: 'Forms',
           },
-      key: 'id',
-      },
+          key: 'id',
+        },
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Checkboxes');
-  }
+  },
 };

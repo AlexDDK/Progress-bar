@@ -1,7 +1,7 @@
-'use strict';
 const {
-  Model
+  Model,
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Checkbox extends Model {
     /**
@@ -9,11 +9,11 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-		 static associate(models) {
-			this.belongsTo(models.Form, {
-				 foreignKey: 'link_id',
-			});
-			}
+    static associate(models) {
+      this.belongsTo(models.Form, {
+        foreignKey: 'link_id',
+      });
+    }
   }
   Checkbox.init({
     q1: DataTypes.BOOLEAN,
@@ -29,7 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     q11: DataTypes.BOOLEAN,
     q12: DataTypes.BOOLEAN,
     q8_Str: DataTypes.STRING,
-    link_id: DataTypes.INTEGER
+    link_id: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Checkbox',
