@@ -21,7 +21,7 @@ router.get('/allforms', async (req, res) => {
 });
 
 router.get('/myforms', async (req, res) => {
-  log
+  
   const lists = await Form.findAll({ where: { creator_id: req.locals.userId } });
   console.log('88888888888888888888888888888888888888888', req.locals.userId );
   res.json(lists);

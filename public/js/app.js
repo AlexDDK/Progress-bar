@@ -79,6 +79,7 @@ container.addEventListener('click', async (e) => {
 
     const response = await fetch('/myforms');
     const lists = await response.json();
+    console.log('777777777777777777777777777777777777', lists);
 
     if (response.ok) {
       ulContainer.innerHTML = '';
