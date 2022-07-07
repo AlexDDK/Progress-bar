@@ -86,10 +86,6 @@ router.get('/allusers', async (req, res) => {
   res.json({ allusers });
 });
 
-router.get('/logout', (req, res) => {
-  req.session.destroy();
-	res.clearCookie('user_sid');
-  res.redirect('/');
-});
+
 
 module.exports = router;
