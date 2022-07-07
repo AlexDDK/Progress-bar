@@ -7,7 +7,7 @@ const restRouter = require('./routes/rest-router');
 const renderRouter = require('./routes/render-router');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.DB_PORT;
 
 const sessionConfig = {
   name: 'user_sid', // Имя куки для хранения id сессии. По умолчанию - connect.sid
@@ -34,16 +34,18 @@ app.use(session(sessionConfig));
 app.use((req, res, next) => {
   res.locals.userId = req.session?.userId;
   res.locals.userEmail = req.session?.userEmail;
+  console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', req.session?.userId);
+  console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', req.session?.userEmail);
   next();
 });
 
 app.use('/', renderRouter);
 app.use('/db', restRouter);
 
-app.use((req, res, next) => {
-  const error = createError(404, 'Запрашиваемой страницы не существует на сервере.');
-  next(error);
-});
+// app.use((req, res, next) => {
+//   const error = createError(404, 'Запрашиваемой страницы не существует на сервере.');
+//   next(error);
+// });
 
 app.listen(PORT, () => {
   console.log(`server started PORT: ${PORT}`);
