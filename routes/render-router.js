@@ -41,6 +41,7 @@ router.post('/main', async (req, res) => {
       if (pass === user.pass) {
         req.session.userEmail = user.email;
         req.session.userId = user.id;
+        req.session.admin = user.isAdmin;
         return res.redirect('/main').status(200);
       }
       res.sendStatus(418);
@@ -109,6 +110,16 @@ router.get('/logout', (req, res) => {
   res.clearCookie('user_sid');
   // res.redirect('/');
   res.sendStatus(200);
+});
+
+router.post('/delete', async (req, res) => {
+  const { email } = req.body;
+  try {
+    await User.destroy({ where: { email } });
+    res.sendStatus(200);
+  } catch (error) {
+    res.sendStatus(418);
+  }
 });
 
 module.exports = router;
