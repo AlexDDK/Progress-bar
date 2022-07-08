@@ -4,38 +4,107 @@
 const input = document.querySelector('#names');
 const main = document.querySelector('#main');
 const checkboxes = document.querySelectorAll('.form-check-input');
+const formId = main.dataset.formid;
+const progressBar = document.querySelector('#progressBar');
+
 const formOutput = {
 };
 
+function getPercent(num) {
+  return Math.floor((num / 12) * 100);
+}
+
 // requesting data from DB
 
-try {
-  fetch('/db/form').then((res) => {
-    for (const el in res) {
-      if (el === input.id) {
-        input.value = res[el];
-        formOutput.names = input.value;
-      }
-      for (let i = 0; i < checkboxes.length; i += 1) {
-        if (el === checkboxes[i].id) {
-          checkboxes[i].checked = res[el];
-          formOutput[el] = res[el];
+window.addEventListener('load', async (event) => {
+  try {
+    const res = await fetch(`/db/form/${formId}`);
+    if (res.ok) {
+      const data = await res.json();
+      for (const el in data) {
+        if (el === 'q8_Str') {
+          input.value = data[el];
+          formOutput.names = input.value;
+        }
+        for (let i = 0; i < checkboxes.length; i += 1) {
+          if (el === checkboxes[i].id) {
+            checkboxes[i].checked = data[el];
+            formOutput[el] = data[el];
+          }
         }
       }
     }
-  });
-} catch (error) {
-  alert('Something went wrong. Please, try to reload the page');
-}
+  } catch {
+    alert("Couldn't get data from DB. Please reload the page.");
+  }
+
+  let counter = 0;
+
+  for (let i = 0; i < checkboxes.length; i += 1) { // adding progressbar
+    if (checkboxes[i].checked) {
+      counter += 1;
+    }
+  }
+
+  counter = getPercent(counter);
+  if (counter <= 50) {
+    progressBar.className = 'progress-bar progress-bar-striped bg-danger';
+    progressBar.setAttribute('style', `width: ${counter}%`);
+    progressBar.setAttribute('aria-valuenow', `${counter}`);
+  } else if (counter <= 75) {
+    progressBar.className = 'progress-bar progress-bar-striped bg-warning';
+    progressBar.setAttribute('style', `width: ${counter}%`);
+    progressBar.setAttribute('aria-valuenow', `${counter}`);
+  } else {
+    progressBar.className = 'progress-bar progress-bar-striped bg-success';
+    progressBar.setAttribute('style', `width: ${counter}%`);
+    progressBar.setAttribute('aria-valuenow', `${counter}`);
+  }
+});
 
 // checkboxes logic
 
-main.addEventListener('click', (event) => {
+main.addEventListener('click', async (event) => {
   if (event.target.type === 'checkbox') {
     if (event.target.checked) {
       formOutput[event.target.id] = true;
     } else {
       formOutput[event.target.id] = false;
+    }
+    formOutput.names = input.value;
+    try {
+      const response = await fetch('/db/form', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({ formOutput, formId }),
+      });
+    } catch (error) {
+      alert("Couldn't send data to DB.");
+    }
+
+    let counter = 0;
+
+    for (let i = 0; i < checkboxes.length; i += 1) { // adding progressbar
+      if (checkboxes[i].checked) {
+        counter += 1;
+      }
+    }
+
+    counter = getPercent(counter);
+    if (counter <= 50) {
+      progressBar.className = 'progress-bar progress-bar-striped bg-danger';
+      progressBar.setAttribute('style', `width: ${counter}%`);
+      progressBar.setAttribute('aria-valuenow', `${counter}`);
+    } else if (counter <= 75) {
+      progressBar.className = 'progress-bar progress-bar-striped bg-warning';
+      progressBar.setAttribute('style', `width: ${counter}%`);
+      progressBar.setAttribute('aria-valuenow', `${counter}`);
+    } else {
+      progressBar.className = 'progress-bar progress-bar-striped bg-success';
+      progressBar.setAttribute('style', `width: ${counter}%`);
+      progressBar.setAttribute('aria-valuenow', `${counter}`);
     }
   }
 });
@@ -44,16 +113,15 @@ main.addEventListener('click', (event) => {
 
 window.addEventListener('beforeunload', async () => {
   formOutput.names = input.value;
-
   try {
     const response = await fetch('/db/form', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
       },
-      body: JSON.stringify({ formOutput }),
+      body: JSON.stringify({ formOutput, formId }),
     });
   } catch (error) {
-    alert('whoops');
+    alert("Couldn't send data to DB.");
   }
 });
