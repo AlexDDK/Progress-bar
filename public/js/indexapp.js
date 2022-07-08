@@ -12,7 +12,7 @@ function addForm() {
     <label for="exampleInputPassword1" class="form-label ">Введите пароль</label>
     <input name="pass" type="password" class="form-control" id="exampleInputPassword1">
   </div>
-  <button type="submit" class="btn btn-primary ">Войти</button>
+  <button type="submit" class="btn btn-success ">Войти</button>
 </form>
 `;
 }
