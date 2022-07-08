@@ -2,7 +2,7 @@ const router = require('express').Router();
 const fetch = require('node-fetch');
 // const isRegistered = require('../middlewares/isRegistered');
 // const authorized = require('../middlewares/authorized');
-const { Form, User } = require('../db/models');
+const { Form, User, Checkbox } = require('../db/models');
 
 router.get('/', (req, res) => {
   res.render('index');
@@ -22,11 +22,21 @@ router.get('/allforms', async (req, res) => {
 });
 
 router.get('/myforms', async (req, res) => {
-  console.log('MMMMMYYYY  FFFFFFFOOOORMMMMS');
-  const lists = await Form.findAll({ where: { creator_id: res.locals.userId } });
-  console.log('88888888888888888888888888888888888888888', res.locals.userId);
-  res.json(lists);
+  try {
+    console.log('MMMMMYYYY  FFFFFFFOOOORMMMMS');
+    const lists = await Form.findAll({ where: { creator_id: req.session.userId } });
+    console.log('88888888888888888888888888888888888888888', req.session.userId);
+    res.json(lists);
+  } catch (error) {
+    alert('whats happening?');
+  }
 });
+
+async function gett(i) {
+  const back = await Checkbox.findOne({ where: { link_id: i } });
+  console.log('back', back);
+  return back;
+}
 
 router.get('/allusers', async (req, res) => {
   const allusers = await User.findAll();
@@ -113,7 +123,6 @@ router.get('/logout', (req, res) => {
   res.sendStatus(200);
 });
 
-
 router.get('/form/:link', async (req, res) => {
   const { link } = req.params;
 
@@ -130,15 +139,49 @@ router.get('/form/:link', async (req, res) => {
 
     res.render('form', { data });
   } else {
-     res.sendStatus(418);
+    res.sendStatus(418);
   }
- });
- 
+});
+
 router.post('/delete', async (req, res) => {
   const { email } = req.body;
   try {
     await User.destroy({ where: { email } });
     res.sendStatus(200);
+  } catch (error) {
+    res.sendStatus(418);
+  }
+});
+
+router.get('/allbox', async (req, res) => {
+  const allbox = await Checkbox.findAll();
+  res.json(allbox);
+});
+
+router.get('/mybox', async (req, res) => {
+  try {
+    const boxes = await Checkbox.findAll({ where: { link_id: req.session.userId } });
+    res.json(boxes);
+    console.log(boxes, 'hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh');
+  } catch (error) {
+    alert('whats happening?');
+  }
+});
+
+router.get('/formsAndCheckboxes', async (req, res) => {
+  try {
+    const data = await Form.findAll({ include: Checkbox });
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', data);
+    // const box = data.map((el) => el.creator_id == req.session.userId);
+    const box = [];
+    for (let i = 0; i < data.length; i += 1) {
+      if (data[i].creator_id == req.session.userId) {
+        box.push(data[i]);
+      }
+    }
+    console.log('444444444444444444444444', box);
+
+    res.json(box);
   } catch (error) {
     res.sendStatus(418);
   }
