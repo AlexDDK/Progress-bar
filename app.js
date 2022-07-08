@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
+const { User } = require('./db/models');
 
 const restRouter = require('./routes/rest-router');
 const renderRouter = require('./routes/render-router');
@@ -31,9 +32,11 @@ app.use(express.json());
 
 app.use(session(sessionConfig));
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
   res.locals.userId = req.session?.userId;
   res.locals.userEmail = req.session?.userEmail;
+  res.locals.admin = req.session?.admin;
+  console.log('AAAAAAADDDMMMIINN', res.locals.admin);
   console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', req.session?.userId);
   console.log('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', req.session?.userEmail);
   next();
