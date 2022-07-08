@@ -50,7 +50,7 @@ function innerUsers(users) {
 function adduser(email) {
   return `
   <li><span class="h">${email}</span> (Пользователь) ${dropButton()}</li><br>
-  `
+  `;
 }
 
 function newUser() {
@@ -74,9 +74,10 @@ function copyLink() {
 async function copyUrl(linkData) {
   try {
     await navigator.clipboard.writeText(linkData);
-    console.log('URL страницы скопирован в буфер обмена');
+    alert('Ссылка скопирована в буфер обмена');
   } catch (err) {
-    console.error('Не удалось скопировать: ', err);
+    alert('Ошибка! Не удалось скопировать ссылку');
+    // console.error('Не удалось скопировать: ', err);
   }
 }
 
@@ -117,14 +118,10 @@ function addFormForm() {
 container.addEventListener('click', async (e) => {
   // -----------------все листки------------------------
   if (e.target.type === 'button' && e.target.dataset.wh === 'all') {
-  
     const response = await fetch('/allforms');
-    console.log('555777777777777777777777777777777777', response);
     const lists = await response.json();
 
     if (response.ok) {
-      // lists = lists.lists;
-      // infoContainer.insertAdjacentHTML('afterbegin', innerlist({lists}));
 
       infoContainer.innerHTML = '';
       buttonContainer.innerHTML = '';
@@ -211,7 +208,7 @@ container.addEventListener('click', async (e) => {
       const allInputs = Object.fromEntries(new FormData(form));
       const link = generateLink();
       allInputs.link = `http://localhost:3000/form/${link}`;
-      console.log('LLLIIIIINNNKKK', allInputs.link);
+
 
       const response = await fetch('/newform', {
         method: 'post',
@@ -222,8 +219,6 @@ container.addEventListener('click', async (e) => {
       });
 
       if (response.ok) {
-        // const resp = await fetch('/myforms');
-        // const lists = await resp.json();
         infoContainer.innerHTML = '';
         ulContainer.innerHTML = '';
         buttonContainer.innerHTML = '';
@@ -240,8 +235,6 @@ container.addEventListener('click', async (e) => {
     const placeLink = infoContainer.querySelector('.clink');
     const link = placeLink.innerText;
     copyUrl(link);
-    // window.location = '/main';
-    // infoContainer.innerHTML = '<h5>Ссылка скопирована</h5>';
   }
 
   // -------------------выйти из сеанса-----------------------------
@@ -262,8 +255,6 @@ container.addEventListener('click', async (e) => {
     const role = closestli.querySelector('.r');
     const obj = { email: email.innerText, role: 'user' };
 
-    //  console.log('11111111122222222222333333333333333', email.innerText);
-
     const response = await fetch('/update', {
       method: 'post',
       headers: {
@@ -273,16 +264,8 @@ container.addEventListener('click', async (e) => {
     });
 
     if (response.ok) {
-      // console.log('.........................................');
-
-      // const data = await response.json();
-      // console.log('6666666666666666666666666666666666666666666', data);
       infoContainer.innerHTML = '';
-      role.innerText = "(Пользователь)"
-      // buttonContainer.innerHTML = '';
-      // ulContainer.innerHTML = '';
-      // ulContainer.insertAdjacentHTML('afterbegin', innerUsers(data));
-      // buttonContainer.insertAdjacentHTML('afterbegin', newUser());
+      role.innerText = '(Пользователь)';
     } else {
       alert('что-то пошло не так');
     }
@@ -305,25 +288,19 @@ container.addEventListener('click', async (e) => {
       body: JSON.stringify(obj),
     });
 
-    const data = await response.json();
-
     if (response.ok) {
       infoContainer.innerHTML = '';
-      // buttonContainer.innerHTML = '';
-      // ulContainer.innerHTML = '';
-      role.innerText = "(Администратор)"
-      // ulContainer.insertAdjacentHTML('afterbegin', innerUsers(data));
-      // buttonContainer.insertAdjacentHTML('afterbegin', newUser());
+
+      role.innerText = '(Администратор)';
     } else {
       alert('что-то пошло не так');
     }
   }
 
-//---------------      Удалить сотрудника----------------------
+  // ---------------      Удалить сотрудника----------------------
   if (e.target.type === 'button' && e.target.dataset.role === 'del') {
     const closestdiv = e.target.closest('div');
     const closestli = closestdiv.closest('li');
-    console.log('CLOSEST LIIIII', closestli);
     const email = closestli.querySelector('.h');
     const obj = { email: email.innerText };
 
@@ -338,12 +315,10 @@ container.addEventListener('click', async (e) => {
     if (response.ok) {
       infoContainer.innerHTML = '';
       buttonContainer.innerHTML = '';
-      // ulContainer.innerHTML = '';
       closestli.remove();
       buttonContainer.insertAdjacentHTML('afterbegin', newUser());
     } else {
       alert('что-то пошло не так');
     }
   }
-
 });
