@@ -96,7 +96,6 @@ async function copyUrl(linkData) {
     alert('Ссылка скопирована в буфер обмена');
   } catch (err) {
     alert('Ошибка! Не удалось скопировать ссылку');
-    // console.error('Не удалось скопировать: ', err);
   }
 }
 
@@ -138,16 +137,24 @@ container.addEventListener('click', async (e) => {
   // -----------------все листки------------------------
   if (e.target.type === 'button' && e.target.dataset.wh === 'all') {
     const response = await fetch('/allforms');
-    const response2 = await fetch('/allbox');
+    // const response2 = await fetch('/allbox');
+    const response2 = await fetch('/formsAndBoxes');
     const lists = await response.json();
     const box = await response2.json();
-    console.log('...................', box);
+    // console.log('+++++++++++++++++++', box);
+    // console.log('+++++++++++++++++++', lists);
+    // const lis = lists.sort((a, b) => a.id - b.i);
+    // const bo = box.sort((a, b) => a.link_id - b.link_i);
+    // console.log('...................', bo);
+    // console.log('...................', lis);
+    const box2 = box.map((el) => el.Checkboxes);
+    const box3 = box2.map((elem) => elem = elem[0]);
 
     if (response.ok && response2.ok) {
       infoContainer.innerHTML = '';
       buttonContainer.innerHTML = '';
       ulContainer.innerHTML = '';
-      ulContainer.insertAdjacentHTML('afterbegin', innerlist(lists, box));
+      ulContainer.insertAdjacentHTML('afterbegin', innerlist(lists, box3));
     } else {
       alert('что-то пошло не так');
     }
