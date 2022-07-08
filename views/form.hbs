@@ -14,12 +14,13 @@
 
     <div id="container">
       <div class="toptext">
-        <p>Добро пожаловать в команду Высокогорья.</p>
-        <p>
+        <p class="der">Добро пожаловать в команду <span class="green"><b>Высокогорья.</b></span></p>
+        <p class="der">
           Впереди нас ждет интересное путешествие в мир нашей компании, и самым главным проводником будет -
-          {{data.nameMentor}}.
+          <b>{{data.nameMentor}}.</b>
         </p>
-        <p>Мы подготовили для тебя чек-лист на первый день. Процесс выполнения будет сохраняться, поэтому ты можешь
+        <p class="der">Мы подготовили для тебя чек-лист на первый день. Процесс выполнения будет сохраняться, поэтому ты
+          можешь
           закрывать
           пункты в удобном для тебя порядке.
         </p>
@@ -78,21 +79,24 @@
             Ты написал(-а) сообщение в командный чат
           </label>
         </div>
+
+        <input class="form-check-input" type="checkbox" value="" id="q8">
+        <label class="form-check-label" for="q8">
+          Напиши имена трех твоих коллег по отделу:
+        </label>
         <div class="form-check ">
           <div id="together">
-            <input class="form-check-input" type="checkbox" value="" id="q8">
-            <label class="form-check-label" for="q8">
-              Напиши имена трех твоих коллег по отделу:
-            </label>
+
             <div class="mb-3">
               <label for="names" class="form-label"></label>
               <input type="text" class="form-control" id="names" placeholder="" value="">
             </div>
           </div>
         </div>
+
       </div>
 
-      <div class="checkfield">
+      <div class="checkfield" id="less">
         <p class="fw-bold">
           Важно пройти оформление в отделе кадров:
         </p>

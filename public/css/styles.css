@@ -1,8 +1,10 @@
 * {
-  /* background-color: rgb(67, 163, 109); */
-  background-color: rgb(150, 202, 172);
   margin: 0;
   padding: 0;
+}
+
+.green {
+  color: #81af37;
 }
 
 .progress {
@@ -18,17 +20,21 @@
 }
 
 h2 {
-  margin-top: 30px;
+  margin-top: 45px;
 }
 
 #ending {
   margin-top: 50px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .toptext {
   margin-top: 50px;
   margin-bottom: 30px;
+}
+
+.der {
+  font-size: 14pt;
 }
 
 p {
@@ -47,5 +53,21 @@ p {
 #together {
   display: flex;
   align-items: center;
-  justify-content:space-between;
+  justify-content: space-between;
+}
+
+#yo {
+  margin-bottom: 0;
+}
+
+#less {
+  margin-top: 30px;
+}
+
+.form-check-input {
+  margin-right: 10px;
+}
+
+#q8 {
+  margin-right: 7px;
 }
