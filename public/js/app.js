@@ -29,10 +29,29 @@ function generateLink() {
   return result.join('');
 }
 
-function innerlist(lists) {
+function progbar(num) {
+  return `
+  <div class="progress">
+  <div class="progress-bar" role="progressbar" style="width: ${num}%" aria-valuenow="${num}" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+  `;
+}
+
+function percent(box) {
+  let count = 0;
+  for (const key in box) {
+    if (box[key] === true) {
+      count += 1;
+    }
+  }
+  return Math.floor((count / 12) * 100);
+}
+
+function innerlist(lists, boxes) {
   let res = '';
   for (let i = 0; i < lists.length; i++) {
-    res += `<li ><a class="text-dark" href="${lists[i].link}">${lists[i].nameEmployee}</a></li>`;
+    const num = percent(boxes[i]);
+    res += `<li ><a class="text-dark" href="${lists[i].link}">${lists[i].nameEmployee}</a>${progbar(num)}</li>`;
   }
   return res;
 }
@@ -119,14 +138,16 @@ container.addEventListener('click', async (e) => {
   // -----------------все листки------------------------
   if (e.target.type === 'button' && e.target.dataset.wh === 'all') {
     const response = await fetch('/allforms');
+    const response2 = await fetch('/allbox');
     const lists = await response.json();
+    const box = await response2.json();
+    console.log('...................', box);
 
-    if (response.ok) {
-
+    if (response.ok && response2.ok) {
       infoContainer.innerHTML = '';
       buttonContainer.innerHTML = '';
       ulContainer.innerHTML = '';
-      ulContainer.insertAdjacentHTML('afterbegin', innerlist(lists));
+      ulContainer.insertAdjacentHTML('afterbegin', innerlist(lists, box));
     } else {
       alert('что-то пошло не так');
     }
@@ -135,14 +156,46 @@ container.addEventListener('click', async (e) => {
   // -----------------мои листки------------------------
 
   if (e.target.type === 'button' && e.target.dataset.wh === 'my') {
-    const response = await fetch('/myforms');
-    const lists = await response.json();
+    const response2 = await fetch('/myforms');
+    const response = await fetch('/formsAndCheckboxes');
+    // const response2 = await fetch('/allbox');
 
-    if (response.ok) {
+    const lists = await response2.json();
+    const box = await response.json();
+    console.log('11111111LISTS', lists);
+    const box2 = box.map((el) => el.Checkboxes);
+    const box3 = box2.map((elem) => elem = elem[0]);
+    console.log('!!!!!!!!!!!!!!!', box3);
+
+    // const box2 = box.filter((el) => {
+    //   el.creator_id === userId;
+    // });
+
+    if (response.ok && response2.ok) {
       infoContainer.innerHTML = '';
       buttonContainer.innerHTML = '';
       ulContainer.innerHTML = '';
-      ulContainer.insertAdjacentHTML('afterbegin', innerlist(lists));
+      ulContainer.insertAdjacentHTML('afterbegin', innerlist(lists, box3));
+
+      // const
+      // const test = lists.map((el)=>{return el.id})
+      // console.log('9999555555556666222222',test);
+
+      // const resp = await fetch('/myformsbylinkid/',{
+      //   method: 'post',
+      //   headers: {
+      //     'Content-type': 'application/json',
+      //   },
+      //   body: JSON.stringify(test),
+      // })
+
+      // const ttt = await resp.json();
+      // console.log('AAAANNNSSSWWEEERRR', ttt);
+
+      // infoContainer.innerHTML = '';
+      // buttonContainer.innerHTML = '';
+      // ulContainer.innerHTML = '';
+      // ulContainer.insertAdjacentHTML('afterbegin', innerlist(lists));
       buttonContainer.insertAdjacentHTML('afterbegin', newList());
     } else {
       alert('что-то пошло не так');
@@ -208,7 +261,6 @@ container.addEventListener('click', async (e) => {
       const allInputs = Object.fromEntries(new FormData(form));
       const link = generateLink();
       allInputs.link = `http://localhost:3000/form/${link}`;
-
 
       const response = await fetch('/newform', {
         method: 'post',
@@ -321,4 +373,10 @@ container.addEventListener('click', async (e) => {
       alert('что-то пошло не так');
     }
   }
+});
+
+window.addEventListener('beforeunload', () => {
+  infoContainer.innerHTML = '';
+  ulContainer.innerHTML = '';
+  buttonContainer.innerHTML = '';
 });
