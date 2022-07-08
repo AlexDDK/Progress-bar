@@ -2,6 +2,7 @@ const router = require('express').Router();
 const fetch = require('node-fetch');
 // const isRegistered = require('../middlewares/isRegistered');
 // const authorized = require('../middlewares/authorized');
+// const bcrypt = require('bcrypt');
 const { Form, User, Checkbox } = require('../db/models');
 
 router.get('/', (req, res) => {
@@ -186,5 +187,24 @@ router.get('/formsAndCheckboxes', async (req, res) => {
     res.sendStatus(418);
   }
 });
+
+
+router.get('/formsAndBoxes', async (req, res) => {
+  try {
+    const data = await Form.findAll({ include: Checkbox });
+    console.log('>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>', data);
+    // const box = data.map((el) => el.creator_id == req.session.userId);
+    const box = [];
+    for (let i = 0; i < data.length; i += 1) {
+      box.push(data[i]);
+    }
+    console.log('444444444444444444444444', box);
+
+    res.json(box);
+  } catch (error) {
+    res.sendStatus(418);
+  }
+});
+
 
 module.exports = router;
